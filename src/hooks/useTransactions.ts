@@ -35,6 +35,9 @@ export const useTransactions = (period: 'day' | 'week' | 'month' | 'year', selec
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Log des transactions enregistrées pour le débogage
+  console.log('Stored Transactions:', transactions);
+
   // Filtrer les transactions en fonction de la période et de la catégorie
   const filteredTransactions = useMemo(() => {
     const now = new Date();
@@ -59,9 +62,13 @@ export const useTransactions = (period: 'day' | 'week' | 'month' | 'year', selec
       const transactionDate = new Date(transaction.date);
       const matchesDate = transactionDate >= startDate && transactionDate <= now;
       const matchesCategory = selectedCategory === 'all' || transaction.category === selectedCategory;
-      return matchesDate && matchesCategory;
+      const isCompleted = transaction.status === 'completed';
+      return matchesDate && matchesCategory && isCompleted;
     });
   }, [transactions, period, selectedCategory]);
+
+  // Log des transactions filtrées pour le débogage
+  console.log('Filtered Transactions:', filteredTransactions);
 
   // Calculer les statistiques
   const stats = useMemo<TransactionStats>(() => {
@@ -92,6 +99,9 @@ export const useTransactions = (period: 'day' | 'week' | 'month' | 'year', selec
     );
   }, [filteredTransactions]);
 
+  // Log des statistiques calculées pour le débogage
+  console.log('Transaction Stats:', stats);
+
   // Calculer les tendances
   const trends: TransactionTrends = useMemo(() => {
     const calculateTrend = (current: number, previous: number) => {
@@ -99,19 +109,20 @@ export const useTransactions = (period: 'day' | 'week' | 'month' | 'year', selec
       const percentChange = ((current - previous) / previous) * 100;
       return {
         trend: percentChange >= 0 ? ('up' as const) : ('down' as const),
-        value: Math.abs(percentChange).toFixed(1)
+        value: percentChange.toFixed(2) + '%',
       };
     };
 
-    // Simuler les données précédentes pour le calcul des tendances
-    const previousRecettes = stats.totalRecettes * 0.9;
-    const previousDepenses = stats.totalDepenses * 1.1;
+    const previousStats = { totalRecettes: 0, totalDepenses: 0 }; // Placeholder for previous stats
 
     return {
-      recettes: calculateTrend(stats.totalRecettes, previousRecettes),
-      depenses: calculateTrend(stats.totalDepenses, previousDepenses)
+      recettes: calculateTrend(stats.totalRecettes, previousStats.totalRecettes),
+      depenses: calculateTrend(stats.totalDepenses, previousStats.totalDepenses),
     };
   }, [stats]);
+
+  // Log des tendances calculées pour le débogage
+  console.log('Transaction Trends:', trends);
 
   // Préparer les données pour les graphiques
   const chartData: ChartData = useMemo(() => {

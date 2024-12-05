@@ -11,6 +11,7 @@ import {
   HomeIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
+  CurrencyDollarIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -44,6 +45,12 @@ const navigation = [
     name: 'Fournisseurs', 
     href: '/fournisseurs', 
     icon: BuildingOfficeIcon,
+    allowedRoles: ['admin', 'finance_manager']
+  },
+  { 
+    name: 'Budget', 
+    href: '/budget', 
+    icon: CurrencyDollarIcon,
     allowedRoles: ['admin', 'finance_manager']
   },
 ];

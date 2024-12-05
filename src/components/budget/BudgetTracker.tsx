@@ -2,11 +2,16 @@ import React from 'react';
 import { useBudgets } from '@/hooks/useBudgets';
 
 const BudgetTracker: React.FC = () => {
-  const { budgets, currentSpending, totalBudget } = useBudgets();
+  const { budgets, totalAllocated, totalSpent } = useBudgets();
+  
+  // Log des valeurs pour le débogage
+  console.log('Budgets:', budgets);
+  console.log('Total Allocated:', totalAllocated);
+  console.log('Total Spent:', totalSpent);
   
   // Calculer le pourcentage des dépenses
-  const spendingPercentage = (currentSpending / totalBudget) * 100;
-  const remainingBudget = totalBudget - currentSpending;
+  const spendingPercentage = totalAllocated > 0 ? (totalSpent / totalAllocated) * 100 : 0;
+  const remainingBudget = totalAllocated - totalSpent;
 
   // Formater les montants en FCFA
   const formatAmount = (amount: number) => {
@@ -25,7 +30,7 @@ const BudgetTracker: React.FC = () => {
         <div>
           <div className="flex justify-between items-center mb-1">
             <span className="text-sm font-medium text-gray-700">Budget Total</span>
-            <span className="text-sm font-medium text-gray-900">{formatAmount(totalBudget)}</span>
+            <span className="text-sm font-medium text-gray-900">{formatAmount(totalAllocated)}</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
@@ -37,7 +42,7 @@ const BudgetTracker: React.FC = () => {
         <div>
           <div className="flex justify-between items-center mb-1">
             <span className="text-sm font-medium text-gray-700">Dépenses</span>
-            <span className="text-sm font-medium text-gray-900">{formatAmount(currentSpending)}</span>
+            <span className="text-sm font-medium text-gray-900">{formatAmount(totalSpent)}</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 

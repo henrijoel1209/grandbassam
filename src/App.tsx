@@ -16,6 +16,7 @@ import Depenses from '@/pages/Depenses';
 import Profile from '@/pages/Profile';
 import Welcome from '@/pages/Welcome';
 import Fournisseurs from '@/pages/Fournisseurs';
+import Budget from '@/pages/Budget';
 import NotFound from '@/pages/NotFound';
 
 const AppContent: React.FC = () => {
@@ -41,6 +42,7 @@ const AppContent: React.FC = () => {
               <Route path="/depenses" element={<ProtectedRoute requiredRole={['admin', 'finance_manager', 'depenses_agent']}><Depenses /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/fournisseurs" element={<ProtectedRoute requiredRole={['admin', 'finance_manager']}><Fournisseurs /></ProtectedRoute>} />
+              <Route path="/budget" element={<ProtectedRoute requiredRole={['admin', 'finance_manager']}><Budget /></ProtectedRoute>} />
               
               {/* 404 and fallback routes */}
               <Route path="/404" element={<NotFound />} />
@@ -53,14 +55,12 @@ const AppContent: React.FC = () => {
   );
 };
 
-const App: React.FC = () => {
-  return (
+const App: React.FC = () => (
+  <Router>
     <Suspense fallback={<Loading />}>
-      <Router>
-        <AppContent />
-      </Router>
+      <AppContent />
     </Suspense>
-  );
-};
+  </Router>
+);
 
 export default App;
